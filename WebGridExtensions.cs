@@ -169,15 +169,12 @@ public static class WebGridExtensions
             html = ul.ToString();
         }
 
-        return new HelperResult(writer =>
-        {
-            writer.Write(html);
-        });
+        return new HelperResult(writer => writer.Write(html));
     }
 
     private static String GridLink(WebGrid webGrid, string url, string text)
     {
-        TagBuilder builder = new TagBuilder("a");
+        var builder = new TagBuilder("a");
         builder.SetInnerText(text);
         builder.MergeAttribute("href", url);
         if (webGrid.IsAjaxEnabled)
