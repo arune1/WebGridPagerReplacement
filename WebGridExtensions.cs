@@ -37,116 +37,118 @@ public static class WebGridExtensions
         var ul = new TagBuilder("ul");
         var li = new List<TagBuilder>();
 
-
-        if (ModeEnabled(mode, WebGridPagerModes.FirstLast))
+        if (totalPages > 0)
         {
-            if (String.IsNullOrEmpty(firstText))
+            if (ModeEnabled(mode, WebGridPagerModes.FirstLast))
             {
-                firstText = "First";
-            }
-
-            var part = new TagBuilder("li")
-            {
-                InnerHtml = GridLink(webGrid, webGrid.GetPageUrl(0), firstText)
-            };
-
-            if (currentPage != 0)
-            {
-                li.Add(part);
-            }
-
-
-        }
-
-        if (ModeEnabled(mode, WebGridPagerModes.NextPrevious))
-        {
-            if (String.IsNullOrEmpty(previousText))
-            {
-                previousText = "Prev";
-            }
-
-            int page = currentPage == 0 ? 0 : currentPage - 1;
-
-            var part = new TagBuilder("li")
-            {
-                InnerHtml = GridLink(webGrid, webGrid.GetPageUrl(page), previousText)
-            };
-
-            if (currentPage != 0)
-            {
-                li.Add(part);
-            }
-        }
-
-
-        if (ModeEnabled(mode, WebGridPagerModes.Numeric) && (totalPages > 1))
-        {
-            int last = currentPage + (numericLinksCount / 2);
-            int first = last - numericLinksCount + 1;
-            if (last > lastPage)
-            {
-                first -= last - lastPage;
-                last = lastPage;
-            }
-            if (first < 0)
-            {
-                last = Math.Min(last + (0 - first), lastPage);
-                first = 0;
-            }
-            for (int i = first; i <= last; i++)
-            {
-
-                var pageText = (i + 1).ToString(CultureInfo.InvariantCulture);
-                var part = new TagBuilder("li")
+                if (String.IsNullOrEmpty(firstText))
                 {
-                    InnerHtml = GridLink(webGrid, webGrid.GetPageUrl(i), pageText)
-                };
-
-                if (i == currentPage)
-                {
-                    part.MergeAttribute("class", "active");
+                    firstText = "First";
                 }
 
-                li.Add(part);
+                var part = new TagBuilder("li")
+                               {
+                                   InnerHtml = GridLink(webGrid, webGrid.GetPageUrl(0), firstText)
+                               };
+
+                if (currentPage != 0)
+                {
+                    li.Add(part);
+                }
+
 
             }
-        }
 
-        if (ModeEnabled(mode, WebGridPagerModes.NextPrevious))
-        {
-            if (String.IsNullOrEmpty(nextText))
+            if (ModeEnabled(mode, WebGridPagerModes.NextPrevious))
             {
-                nextText = "Next";
+                if (String.IsNullOrEmpty(previousText))
+                {
+                    previousText = "Prev";
+                }
+
+                int page = currentPage == 0 ? 0 : currentPage - 1;
+
+                var part = new TagBuilder("li")
+                               {
+                                   InnerHtml = GridLink(webGrid, webGrid.GetPageUrl(page), previousText)
+                               };
+
+                if (currentPage != 0)
+                {
+                    li.Add(part);
+                }
             }
 
-            int page = currentPage == lastPage ? lastPage : currentPage + 1;
 
-            var part = new TagBuilder("li")
+            if (ModeEnabled(mode, WebGridPagerModes.Numeric) && (totalPages > 1))
             {
-                InnerHtml = GridLink(webGrid, webGrid.GetPageUrl(page), nextText)
-            };
+                int last = currentPage + (numericLinksCount/2);
+                int first = last - numericLinksCount + 1;
+                if (last > lastPage)
+                {
+                    first -= last - lastPage;
+                    last = lastPage;
+                }
+                if (first < 0)
+                {
+                    last = Math.Min(last + (0 - first), lastPage);
+                    first = 0;
+                }
+                for (int i = first; i <= last; i++)
+                {
 
-            if (!(currentPage == lastPage || totalPages == 1))
-            {
-                li.Add(part);
+                    var pageText = (i + 1).ToString(CultureInfo.InvariantCulture);
+                    var part = new TagBuilder("li")
+                                   {
+                                       InnerHtml = GridLink(webGrid, webGrid.GetPageUrl(i), pageText)
+                                   };
+
+                    if (i == currentPage)
+                    {
+                        part.MergeAttribute("class", "active");
+                    }
+
+                    li.Add(part);
+
+                }
             }
-        }
 
-        if (ModeEnabled(mode, WebGridPagerModes.FirstLast))
-        {
-            if (String.IsNullOrEmpty(lastText))
+            if (ModeEnabled(mode, WebGridPagerModes.NextPrevious))
             {
-                lastText = "Last";
+                if (String.IsNullOrEmpty(nextText))
+                {
+                    nextText = "Next";
+                }
+
+                int page = currentPage == lastPage ? lastPage : currentPage + 1;
+
+                var part = new TagBuilder("li")
+                               {
+                                   InnerHtml = GridLink(webGrid, webGrid.GetPageUrl(page), nextText)
+                               };
+
+                if (!(currentPage == lastPage || totalPages == 1))
+                {
+                    li.Add(part);
+                }
             }
 
-            var part = new TagBuilder("li")
+            if (ModeEnabled(mode, WebGridPagerModes.FirstLast))
             {
-                InnerHtml = GridLink(webGrid, webGrid.GetPageUrl(lastPage), lastText)
-            };
+                if (String.IsNullOrEmpty(lastText))
+                {
+                    lastText = "Last";
+                }
 
-            if (!(currentPage == lastPage || totalPages == 1))
-            {
-                li.Add(part);
+                var part = new TagBuilder("li")
+                               {
+                                   InnerHtml = GridLink(webGrid, webGrid.GetPageUrl(lastPage), lastText)
+                               };
+
+                if (!(currentPage == lastPage || totalPages == 1))
+                {
+                    li.Add(part);
+                }
             }
         }
 
